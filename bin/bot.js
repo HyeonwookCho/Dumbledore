@@ -2,7 +2,7 @@ const Dumbledore = require('../lib/dumbledore');
 const ParseInstance = require('../parse-server/parse');
 const Parse = require('parse/node');
 const { atob } = require('../lib/helper/common');
-
+const APIAI = require('../lib/helper/apiai');
 /**
  * Environment variables used to configure the bot:
  *
@@ -35,12 +35,16 @@ server.create().then(() => {
   let token = process.env.BOT_API_KEY;
   if (token.length > 42) token = atob(token);
 
+  const apiai = new APIAI(process.env.APIAI_TOKEN, process.env.APIAI_SESSIONID);
+
+  console.log('apiai : ' + apiai);
   // dumbledore bot
   const dumbledore = new Dumbledore({
     token,
     dbPath: process.env.BOT_DB_PATH,
     name: process.env.BOT_NAME,
-    githubChannel: process.env.BOT_GITHUB_CHANNEL_ID
+    githubChannel: process.env.BOT_GITHUB_CHANNEL_ID,
+    apiAi: apiai
   });
 
   dumbledore.run().then(() => {
